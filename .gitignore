@@ -1,4 +1,4 @@
-*.class
+gaa*.class
 *.log
 
 # sbt specific

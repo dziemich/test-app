@@ -1,15 +1,31 @@
-package dziemich.calculator
+package dziemich.calculator.actors
 
-import dziemich.calculator.GlobalTypes.CalculationResult
+import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.typed.scaladsl.Behaviors
+import akka.util.Timeout
+import dziemich.calculator.BasicOperations
+import dziemich.calculator.GlobalTypes.{CalculationResult, ValidationResult}
+import dziemich.calculator.actors.Calculator.PerformCalculation
+import akka.pattern.{ask, pipe}
+import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.Future
 
-class Calculator {
+object Calculator {
+  def props(implicit timeout: Timeout): Props = Props(new Calculator)
+
+  case class PerformCalculation(validationResult: ValidationResult)
+
+}
+
+class Calculator extends Actor {
+
   def calcRec(seq1: Seq[Char]): CalculationResult = {
     var tmp1: Long = 0
     var res1: Long = 0
     var num1: Long = 0
     var op: Char = '+'
-    
+
     @scala.annotation.tailrec
     def recHelper(remaining: List[Char]): CalculationResult = {
       def getClosingParamIndex(tail: List[Char]): Int = {
@@ -60,15 +76,14 @@ class Calculator {
         }
       }
     }
+
     recHelper(seq1.toList).flatMap(res => BasicOperations.calculate(num1, tmp1, op).map(cal => cal + res))
   }
-}
 
-object Main {
-
-  def main(args: Array[String]): Unit = {
-    val s = new Calculator()
-    println(s.calcRec("2+2".toSeq))
+  override def receive: Receive = {
+    case PerformCalculation(vr) => vr match {
+      case Left(error) => pipe(Future(Left(error.toString))).to(sender())
+      case Right(seq) => pipe(Future(calcRec(seq))).to(sender())
+    }
   }
 }
-

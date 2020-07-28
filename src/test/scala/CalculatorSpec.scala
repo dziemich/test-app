@@ -1,4 +1,4 @@
-import dziemich.calculator.Calculator
+import dziemich.calculator.actors.Calculator
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should

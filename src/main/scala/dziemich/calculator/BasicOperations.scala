@@ -36,6 +36,6 @@ object BasicOperations {
     if (op == '+') Right(add(num, tmp))
     else if (op == '-') Right(sub(num, tmp))
     else if (op == '*') Right(mul(num, tmp))
-    else if (tmp == 0 && op == '/') Left(new IllegalStateException("0 div")) else Right(div(num, tmp))
+    else if (tmp == 0 && op == '/') Left("Division by 0 is not permitted") else Right(div(num, tmp))
   }
 }

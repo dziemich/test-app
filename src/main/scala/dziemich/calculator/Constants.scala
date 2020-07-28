@@ -12,7 +12,7 @@ object ValidationError extends Enumeration {
 }
 
 object GlobalTypes {
-  type CalculationResult = Either[Exception, Long]
+  type CalculationResult = Either[String, Long]
   type ValidationResult = Either[ValidationError.Value, String]
 }
 

@@ -1,10 +1,29 @@
-package dziemich.calculator
+package dziemich.calculator.actors
 
+import akka.actor.{Actor, Props}
+import akka.util.Timeout
 import dziemich.calculator.GlobalTypes.ValidationResult
+import dziemich.calculator.ValidationError
+import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.typed.scaladsl.Behaviors
+import akka.util.Timeout
+import dziemich.calculator.BasicOperations
+import dziemich.calculator.GlobalTypes.{CalculationResult, ValidationResult}
+import akka.pattern.{ask, pipe}
+import dziemich.calculator.actors.Validator.PerformValidation
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.collection.mutable
 
-class Validator {
+object Validator {
+  def props(implicit timeout: Timeout): Props = Props(new Validator)
+
+  case class PerformValidation(inputString: String)
+
+}
+
+class Validator extends Actor {
   val operators: Array[Char] = Array('+', '-', '*', '/')
   val charsAllowed: Array[Char] = Array('(', ')') ++ operators
 
@@ -15,7 +34,7 @@ class Validator {
   def validateLast(c: Char): Boolean = c == ')' || c.isDigit
 
   def validate(string: String): ValidationResult = {
-    var cleaned = string.filterNot((x: Char) => x.isWhitespace)
+    val cleaned = string.filterNot((x: Char) => x.isWhitespace)
     if (cleaned.length <= 2) return Left(ValidationError.INPUT_TOO_SHORT)
     val stack: mutable.Stack[Char] = mutable.Stack()
 
@@ -50,10 +69,11 @@ class Validator {
         }
       }
     }
-//    if (last == ')') {
-//      if (stack.isEmpty) return Left(ValidationError.UNBALANCED_PARENTHESES)
-//      stack.pop()
-//    }
     if (stack.isEmpty) Right(cleaned) else Left(ValidationError.UNBALANCED_PARENTHESES)
   }
+
+  override def receive: Receive = {
+    case PerformValidation(input) => pipe(Future.successful(validate(input))).to(sender())
+  }
+
 }
