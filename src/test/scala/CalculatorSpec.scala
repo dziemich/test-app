@@ -37,14 +37,14 @@ class CalculatorSpec extends AnyFunSpec with should.Matchers {
     }
 
     it("should handle single negative number in parenthesis") {
-      calculator.calcRec("4*(-2)") should be(Right((4 * (-2))))
-      calculator.calcRec("4/(-2)") should be(Right((4 / (-2))))
-      calculator.calcRec("4+(-2)") should be(Right((4 + (-2))))
-      calculator.calcRec("4-(-2)") should be(Right((4 - (-2))))
-      calculator.calcRec("-4*(-2)") should be(Right((-4 * (-2))))
-      calculator.calcRec("-4/(-2)") should be(Right((-4 / (-2))))
+      calculator.calcRec("4*(-2)") should be(Right(4 * (-2)))
+      calculator.calcRec("4/(-2)") should be(Right(4 / (-2)))
+      calculator.calcRec("4+(-2)") should be(Right(4 + (-2)))
+      calculator.calcRec("4-(-2)") should be(Right(4 - (-2)))
+      calculator.calcRec("-4*(-2)") should be(Right(-4 * (-2)))
+      calculator.calcRec("-4/(-2)") should be(Right(-4 / (-2)))
       calculator.calcRec("-4+(-2)") should be(Right((-4 + (-2))))
-      calculator.calcRec("-4-(-2)") should be(Right((-4 - (-2))))
+      calculator.calcRec("-4-(-2)") should be(Right(-4 - (-2)))
     }
   }
 }

@@ -51,21 +51,18 @@ class Validator extends Actor {
       if (!isAllowed(current)) return Left(ValidationError.ILLEGAL_CHARACTER)
       current match {
         case '(' => stack.push(current)
-        case ')' => {
+        case ')' =>
           if (stack.isEmpty) return Left(ValidationError.UNBALANCED_PARENTHESES)
           if (operators.contains(previous)) return Left(ValidationError.INVALID_OPERATOR_USAGE)
           if (stack.top == '(') {
             stack.pop()
           } else return Left(ValidationError.UNBALANCED_PARENTHESES)
-        }
-        case '+' | '*' | '/' => {
+        case '+' | '*' | '/' =>
           if (
             (List('(') ++ operators).contains(previous)) return Left(ValidationError.INVALID_OPERATOR_USAGE)
-        }
         case '-' => if (operators.contains(previous)) return Left(ValidationError.INVALID_OPERATOR_USAGE)
-        case digit if digit.isDigit => {
+        case digit if digit.isDigit =>
           if (previous == ')') return Left(ValidationError.MISSING_OPERATOR)
-        }
       }
     }
     if (stack.isEmpty) Right(cleaned) else Left(ValidationError.UNBALANCED_PARENTHESES)

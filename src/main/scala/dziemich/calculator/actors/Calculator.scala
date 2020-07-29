@@ -29,10 +29,10 @@ class Calculator extends Actor {
     @scala.annotation.tailrec
     def recHelper(remaining: List[Char]): CalculationResult = {
       def getClosingParamIndex(tail: List[Char]): Int = {
-        var ind = 0;
-        var parOpened = 1;
+        var ind = 0
+        var parOpened = 1
         while ( {
-          ind += 1;
+          ind += 1
           ind - 1
         } < tail.length) {
           ind
@@ -40,17 +40,16 @@ class Calculator extends Actor {
           else if (tail(ind) == ')') parOpened -= 1
           if (parOpened == 0) return ind
         }
-        -1
+        ind
       }
 
       remaining match {
         case Nil => Right(res1)
         case head :: tail => head match {
-          case headChar if headChar.isDigit => {
+          case headChar if headChar.isDigit =>
             tmp1 = tmp1 * 10 + headChar - '0'
             recHelper(tail)
-          }
-          case '(' => {
+          case '(' =>
             val closingParIndex: Int = getClosingParamIndex(tail)
             val skippedTail = tail.drop(closingParIndex + 1)
 
@@ -59,8 +58,7 @@ class Calculator extends Actor {
               case Right(value) => value
             }
             recHelper(skippedTail)
-          }
-          case _ => {
+          case _ =>
             num1 = BasicOperations.calculate(num1, tmp1, op) match {
               case Left(ex) => return Left(ex)
               case Right(value) => value
@@ -72,7 +70,6 @@ class Calculator extends Actor {
             tmp1 = 0
             op = head
             recHelper(tail)
-          }
         }
       }
     }

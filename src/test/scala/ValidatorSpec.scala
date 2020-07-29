@@ -4,7 +4,7 @@ import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should
 
 class ValidatorSpec extends AnyFunSpec with should.Matchers {
-  val validator: Validator = new Validator();
+  val validator: Validator = new Validator()
 
   describe("Validator") {
     it("should check for too short input") {
