@@ -6,7 +6,7 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.testkit.TestKit
 import akka.util.ByteString
 import dziemich.calculator.routes.RestApi
-import dziemich.calculator.utils.{Error, JsonMarshaller, Result, ValidationError}
+import dziemich.calculator.utils.{Error, JsonMarshaller, Result, ProcessingError}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
@@ -50,7 +50,7 @@ class RouteSpec()
         entity = HttpEntity(MediaTypes.`application/json`, json))
 
       postRequest ~> route ~> check {
-        responseAs[Error] shouldEqual Error(ValidationError.UNBALANCED_PARENTHESES.toString)
+        responseAs[Error] shouldEqual Error(ProcessingError.UNBALANCED_PARENTHESES)
       }
     }
   }

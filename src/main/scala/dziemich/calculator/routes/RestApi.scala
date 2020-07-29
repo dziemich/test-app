@@ -5,9 +5,9 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import akka.pattern.ask
 import akka.util.Timeout
-import dziemich.calculator.actors.Calculator.PerformCalculation
-import dziemich.calculator.actors.Validator.PerformValidation
-import dziemich.calculator.actors.{Calculator, Validator}
+import dziemich.calculator.actors.CalculatorActor.PerformCalculation
+import dziemich.calculator.actors.ValidatorActor.PerformValidation
+import dziemich.calculator.actors.{CalculatorActor, ValidatorActor}
 import dziemich.calculator.utils.GlobalTypes.{CalculationResult, ValidationResult}
 import dziemich.calculator.utils.{Error, Expression, JsonMarshaller, Result}
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -25,8 +25,8 @@ class RestApi(actorSystem: ActorSystem, timeout: Timeout) extends Api with JsonM
   implicit val requestTimeout: Timeout = timeout
   implicit def executionContext: ExecutionContextExecutor = actorSystem.dispatcher
   
-  def createCalculator(): ActorRef = actorSystem.actorOf(Calculator.props)
-  def createValidator(): ActorRef = actorSystem.actorOf(Validator.props)
+  def createCalculator(): ActorRef = actorSystem.actorOf(CalculatorActor.props)
+  def createValidator(): ActorRef = actorSystem.actorOf(ValidatorActor.props)
   
   def requestValidation(event: String): Future[ValidationResult] = {
     validatorActor.ask(PerformValidation(event)).mapTo[ValidationResult]
@@ -42,7 +42,7 @@ class RestApi(actorSystem: ActorSystem, timeout: Timeout) extends Api with JsonM
         pathEndOrSingleSlash {
           entity(as[Expression]) { ex =>
             onSuccess(requestValidation(ex.expression).flatMap(vr => requestCalculation(vr))) {
-              case Left(value) => complete(Error(value))
+              case Left(ex) => complete(Error(ex))
               case Right(value) => complete(Result(value))
             }
           }

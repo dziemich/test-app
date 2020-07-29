@@ -1,22 +1,9 @@
-package dziemich.calculator.actors
+package dziemich.calculator.processing
 
-import akka.actor.{Actor, Props}
-import akka.pattern.pipe
-import akka.util.Timeout
-import dziemich.calculator.actors.Calculator.PerformCalculation
-import dziemich.calculator.utils.BasicOperations
-import dziemich.calculator.utils.GlobalTypes.{CalculationResult, ValidationResult}
+import dziemich.calculator.utils.{BasicOperations, ProcessingError}
+import dziemich.calculator.utils.GlobalTypes.CalculationResult
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-
-object Calculator {
-  def props(implicit timeout: Timeout): Props = Props(new Calculator)
-  case class PerformCalculation(validationResult: ValidationResult)
-}
-
-class Calculator extends Actor {
-
+object CalculationProcessor {
   def calcRec(seq1: Seq[Char]): CalculationResult = {
     var parsed: Long = 0
     var result: Long = 0
@@ -44,6 +31,7 @@ class Calculator extends Actor {
         case Nil => Right(result)
         case head :: tail => head match {
           case headChar if headChar.isDigit =>
+            if (Long.MaxValue / 10 < parsed) return Left(ProcessingError.LONG_OVERFLOW)
             parsed = parsed * 10 + headChar - '0'
             recHelper(tail)
           case '(' =>
@@ -71,12 +59,5 @@ class Calculator extends Actor {
       }
     }
     recHelper(seq1.toList).flatMap(res => BasicOperations.calculate(accumulator, parsed, operator).map(cal => cal + res))
-  }
-
-  override def receive: Receive = {
-    case PerformCalculation(vr) => vr match {
-      case Left(error) => pipe(Future(Left(error.toString))).to(sender())
-      case Right(seq) => pipe(Future(calcRec(seq))).to(sender())
-    }
   }
 }
