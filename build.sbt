@@ -1,4 +1,4 @@
-name := "closer"
+name := "test-app"
 version := "0.1"
 
 scalaVersion := "2.13.3"
