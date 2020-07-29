@@ -1,7 +1,7 @@
 package dziemich.calculator.processing
 
-import dziemich.calculator.utils.{BasicOperations, ProcessingError}
 import dziemich.calculator.utils.GlobalTypes.CalculationResult
+import dziemich.calculator.utils.{BasicOperations, ProcessingError}
 
 object CalculationProcessor {
   def calcRec(seq1: Seq[Char]): CalculationResult = {

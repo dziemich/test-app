@@ -1,6 +1,6 @@
 package dziemich.calculator.utils
 
-import play.api.libs.json.{Format, JsString, JsValue, Json}
+import play.api.libs.json.{Format, Json}
 
 
 object ProcessingError extends Enumeration {

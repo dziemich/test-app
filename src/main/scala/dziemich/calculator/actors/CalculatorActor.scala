@@ -5,8 +5,7 @@ import akka.pattern.pipe
 import akka.util.Timeout
 import dziemich.calculator.actors.CalculatorActor.PerformCalculation
 import dziemich.calculator.processing.CalculationProcessor
-import dziemich.calculator.utils.{BasicOperations}
-import dziemich.calculator.utils.GlobalTypes.{CalculationResult, ValidationResult}
+import dziemich.calculator.utils.GlobalTypes.ValidationResult
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

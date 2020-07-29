@@ -10,6 +10,7 @@ import dziemich.calculator.actors.ValidatorActor.PerformValidation
 import dziemich.calculator.actors.{CalculatorActor, ValidatorActor}
 import dziemich.calculator.utils.GlobalTypes.{CalculationResult, ValidationResult}
 import dziemich.calculator.utils.{Error, Expression, JsonMarshaller, Result}
+
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
 

@@ -5,10 +5,7 @@ import akka.pattern.pipe
 import akka.util.Timeout
 import dziemich.calculator.actors.ValidatorActor.PerformValidation
 import dziemich.calculator.processing.ValidationProcessor
-import dziemich.calculator.utils.GlobalTypes.ValidationResult
-import dziemich.calculator.utils.ProcessingError
 
-import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
