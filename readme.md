@@ -29,6 +29,6 @@ http: //localhost:5555/evaluate
 ```
 
 ## Comentary
-Validator and Calculator have been implemented as two seperate entities. The example is very simple, but if the valdation
-This was done to have in mind that the Validator might need to verify something against an external service and this system allows to do that in a comfortable fashion.
+Validator and Calculator have been implemented as two seperate entities. The example is very simple.
+This was done having in mind that the Validator might need to verify something against an external service (as this is usually the case in real world applications) and this system allows to do that in a comfortable fashion.
 
