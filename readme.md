@@ -21,9 +21,7 @@ respond with the evaluated result or validation error.
 
 ```
 Example:
-$ curl -H " Content-Type: application/json " \ -X POST \
--d ' {"expression":"(1-1)*2+3*(1-3+4)+10/2"} ' \
-http: //localhost:5555/evaluate
+curl -H "Content-Type: application/json" -X POST -d '{"expression":"(1-1)*2+3*(1-3+4)+10/2"}' http://localhost:5555/evaluate
 
 {" result ": 11}
 ```
