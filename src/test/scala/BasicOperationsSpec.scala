@@ -1,4 +1,4 @@
-import dziemich.calculator.BasicOperations
+import dziemich.calculator.utils.BasicOperations
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 

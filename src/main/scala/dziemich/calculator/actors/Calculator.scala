@@ -3,12 +3,12 @@ package dziemich.calculator.actors
 import akka.actor.{Actor, ActorRef, Props}
 import akka.actor.typed.scaladsl.Behaviors
 import akka.util.Timeout
-import dziemich.calculator.BasicOperations
-import dziemich.calculator.GlobalTypes.{CalculationResult, ValidationResult}
+import dziemich.calculator.utils.GlobalTypes.{CalculationResult, ValidationResult}
 import dziemich.calculator.actors.Calculator.PerformCalculation
 import akka.pattern.{ask, pipe}
-import scala.concurrent.ExecutionContext.Implicits.global
+import dziemich.calculator.utils.BasicOperations
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object Calculator {

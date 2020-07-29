@@ -1,6 +1,6 @@
-package dziemich.calculator
+package dziemich.calculator.utils
 
-import dziemich.calculator.GlobalTypes.CalculationResult
+import dziemich.calculator.utils.GlobalTypes.CalculationResult
 
 object BasicOperations {
   @scala.annotation.tailrec

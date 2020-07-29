@@ -15,28 +15,15 @@ import scala.io.StdIn
 
 object Server {
   def main(args: Array[String]) {
-    implicit val system: ActorSystem = ActorSystem("my-system")
+    implicit val system: ActorSystem = ActorSystem("system")
     implicit val executionContext: ExecutionContextExecutor = system.dispatcher
-    
 
-//    object MyJsonProtocol extends DefaultJsonProtocol {
-//    }
-
-//    import MyJsonProtocol._
-//    import spray.json._
-    
     def requestTimeout(): Timeout = {
       val d = Duration(10000, "millis")
       FiniteDuration(d.length, d.unit)
     }
-    val api = new RestApi(system, requestTimeout())
-    
-    val bindingFuture = Http().bindAndHandle(api.routes, "localhost", 5555)
 
-    println(s"Server online at http://localhost:5555/\nPress RETURN to stop...")
-    StdIn.readLine() // let it run until user presses return
-    bindingFuture
-      .flatMap(_.unbind()) // trigger unbinding from the port
-      .onComplete(_ => system.terminate()) // and shutdown when done
+    val api = new RestApi(system, requestTimeout())
+    Http().bindAndHandle(api.route, "localhost", 5555)
   }
 }

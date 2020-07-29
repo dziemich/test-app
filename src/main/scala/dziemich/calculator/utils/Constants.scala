@@ -1,4 +1,4 @@
-package dziemich.calculator
+package dziemich.calculator.utils
 
 object ValidationError extends Enumeration {
   type ErrorMessage = Value

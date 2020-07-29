@@ -2,15 +2,14 @@ package dziemich.calculator.actors
 
 import akka.actor.{Actor, Props}
 import akka.util.Timeout
-import dziemich.calculator.GlobalTypes.ValidationResult
-import dziemich.calculator.ValidationError
+import dziemich.calculator.utils.GlobalTypes.ValidationResult
 import akka.actor.{Actor, ActorRef, Props}
 import akka.actor.typed.scaladsl.Behaviors
 import akka.util.Timeout
-import dziemich.calculator.BasicOperations
-import dziemich.calculator.GlobalTypes.{CalculationResult, ValidationResult}
+import dziemich.calculator.utils.GlobalTypes.{CalculationResult, ValidationResult}
 import akka.pattern.{ask, pipe}
 import dziemich.calculator.actors.Validator.PerformValidation
+import dziemich.calculator.utils.{BasicOperations, ValidationError}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

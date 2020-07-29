@@ -7,11 +7,11 @@ import akka.pattern.ask
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import akka.http.scaladsl.unmarshalling.FromRequestUnmarshaller
-import dziemich.calculator.{CMarshaller, Error, Expression, Result}
-import dziemich.calculator.GlobalTypes.{CalculationResult, ValidationResult}
+import dziemich.calculator.utils.GlobalTypes.{CalculationResult, ValidationResult}
 import dziemich.calculator.actors.Calculator.PerformCalculation
 import dziemich.calculator.actors.Validator.PerformValidation
 import dziemich.calculator.actors.{Calculator, Validator}
+import dziemich.calculator.utils.{JsonMarshaller, Error, Expression, Result}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.ExecutionContextExecutor
@@ -29,7 +29,7 @@ trait Api {
 
 }
 
-class RestApi(actorSystem: ActorSystem, timeout: Timeout) extends Api with CMarshaller {
+class RestApi(actorSystem: ActorSystem, timeout: Timeout) extends Api with JsonMarshaller {
   implicit val requestTimeout: Timeout = timeout
 
   implicit def executionContext: ExecutionContextExecutor = actorSystem.dispatcher
@@ -47,36 +47,9 @@ class RestApi(actorSystem: ActorSystem, timeout: Timeout) extends Api with CMars
   def requestCalculation(validationResult: ValidationResult): Future[CalculationResult] = {
     calculatorActor.ask(PerformCalculation(validationResult)).mapTo[CalculationResult]
   }
-
-  //
-  //  protected val route: Route =
-  //    path("evaluate") { _ =>
-  //      post {
-  //          entity(as[Expression]) { ex =>
-  //              requestValidation(ex.expression).flatMap(vr => requestCalculation(vr)).onComplete {
-  //                case value => complete(s"The result was $value")
-  //                case Failure(ex) => complete(s"The result was ${ex.getMessage}")
-  //              }
-  //            }
-  //          }
-  //    }
-
-
-  //  protected val r2: Route = {
-  //    pathPrefix("a") { event ⇒
-  //      post {
-  //        //    POST show-tix/v1/events/event_name
-  //        pathEndOrSingleSlash {
-  //          entity(as[Expression]) { ed =>
-  //            complete("OK")
-  //          }
-  //        }
-  //      }
-  //    }
-  //  }
-
-  protected val getAllEventsRoute: Route = {
-    pathPrefix("events") {
+  
+  protected val evaluateRoute: Route = {
+    pathPrefix("evaluate") {
       post {
         pathEndOrSingleSlash {
           entity(as[Expression]) { ex =>
@@ -90,5 +63,5 @@ class RestApi(actorSystem: ActorSystem, timeout: Timeout) extends Api with CMars
     }
   }
 
-  val routes: Route = getAllEventsRoute
+  val route: Route = evaluateRoute
 }

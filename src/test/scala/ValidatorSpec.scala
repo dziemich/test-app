@@ -1,5 +1,5 @@
-import dziemich.calculator.ValidationError
 import dziemich.calculator.actors.Validator
+import dziemich.calculator.utils.ValidationError
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should
 
