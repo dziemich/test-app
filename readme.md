@@ -32,3 +32,8 @@ http: //localhost:5555/evaluate
 Validator and Calculator have been implemented as two seperate entities. The example is very simple.
 This was done having in mind that the Validator might need to verify something against an external service (as this is usually the case in real world applications) and this system allows to do that in a comfortable fashion.
 
+## Running
+Run
+```
+sbt "runMain dziemich.calculator.Server"
+```

@@ -1,7 +1,10 @@
 package dziemich.calculator
 
+import java.util.logging.Logger
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.server.directives.DebuggingDirectives
 import akka.util.Timeout
 import dziemich.calculator.routes.RestApi
 
@@ -20,6 +23,8 @@ object Server {
     }
 
     val api = new RestApi(system, requestTimeout())
-    Http().bindAndHandle(api.route, "localhost", 5555)
+    val port = 5555
+    Http().bindAndHandle(api.route, "localhost", port)
+    println(s"Server running on port http://localhost:$port")
   }
 }
