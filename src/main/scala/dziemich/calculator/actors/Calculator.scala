@@ -1,30 +1,27 @@
 package dziemich.calculator.actors
 
-import akka.actor.{Actor, ActorRef, Props}
-import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.{Actor, Props}
+import akka.pattern.pipe
 import akka.util.Timeout
-import dziemich.calculator.utils.GlobalTypes.{CalculationResult, ValidationResult}
 import dziemich.calculator.actors.Calculator.PerformCalculation
-import akka.pattern.{ask, pipe}
 import dziemich.calculator.utils.BasicOperations
+import dziemich.calculator.utils.GlobalTypes.{CalculationResult, ValidationResult}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object Calculator {
   def props(implicit timeout: Timeout): Props = Props(new Calculator)
-
   case class PerformCalculation(validationResult: ValidationResult)
-
 }
 
 class Calculator extends Actor {
 
   def calcRec(seq1: Seq[Char]): CalculationResult = {
-    var tmp1: Long = 0
-    var res1: Long = 0
-    var num1: Long = 0
-    var op: Char = '+'
+    var parsed: Long = 0
+    var result: Long = 0
+    var accumulator: Long = 0
+    var operator: Char = '+'
 
     @scala.annotation.tailrec
     def recHelper(remaining: List[Char]): CalculationResult = {
@@ -44,37 +41,36 @@ class Calculator extends Actor {
       }
 
       remaining match {
-        case Nil => Right(res1)
+        case Nil => Right(result)
         case head :: tail => head match {
           case headChar if headChar.isDigit =>
-            tmp1 = tmp1 * 10 + headChar - '0'
+            parsed = parsed * 10 + headChar - '0'
             recHelper(tail)
           case '(' =>
             val closingParIndex: Int = getClosingParamIndex(tail)
             val skippedTail = tail.drop(closingParIndex + 1)
 
-            tmp1 = calcRec(tail.take(closingParIndex)) match {
+            parsed = calcRec(tail.take(closingParIndex)) match {
               case Left(ex) => return Left(ex)
               case Right(value) => value
             }
             recHelper(skippedTail)
           case _ =>
-            num1 = BasicOperations.calculate(num1, tmp1, op) match {
+            accumulator = BasicOperations.calculate(accumulator, parsed, operator) match {
               case Left(ex) => return Left(ex)
               case Right(value) => value
             }
             if (head == '+' || head == '-') {
-              res1 = res1 + num1
-              num1 = 0
+              result = result + accumulator
+              accumulator = 0
             }
-            tmp1 = 0
-            op = head
+            parsed = 0
+            operator = head
             recHelper(tail)
         }
       }
     }
-
-    recHelper(seq1.toList).flatMap(res => BasicOperations.calculate(num1, tmp1, op).map(cal => cal + res))
+    recHelper(seq1.toList).flatMap(res => BasicOperations.calculate(accumulator, parsed, operator).map(cal => cal + res))
   }
 
   override def receive: Receive = {

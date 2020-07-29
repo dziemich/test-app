@@ -1,19 +1,15 @@
 package dziemich.calculator.actors
 
 import akka.actor.{Actor, Props}
+import akka.pattern.pipe
 import akka.util.Timeout
-import dziemich.calculator.utils.GlobalTypes.ValidationResult
-import akka.actor.{Actor, ActorRef, Props}
-import akka.actor.typed.scaladsl.Behaviors
-import akka.util.Timeout
-import dziemich.calculator.utils.GlobalTypes.{CalculationResult, ValidationResult}
-import akka.pattern.{ask, pipe}
 import dziemich.calculator.actors.Validator.PerformValidation
-import dziemich.calculator.utils.{BasicOperations, ValidationError}
+import dziemich.calculator.utils.GlobalTypes.ValidationResult
+import dziemich.calculator.utils.ValidationError
 
+import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.collection.mutable
 
 object Validator {
   def props(implicit timeout: Timeout): Props = Props(new Validator)

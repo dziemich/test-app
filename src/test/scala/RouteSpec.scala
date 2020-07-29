@@ -3,10 +3,10 @@ import java.util.concurrent.TimeUnit
 import akka.http.scaladsl.model.{HttpEntity, HttpMethods, HttpRequest, MediaTypes}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import akka.testkit.{ImplicitSender, TestActors, TestKit}
+import akka.testkit.TestKit
 import akka.util.ByteString
 import dziemich.calculator.routes.RestApi
-import dziemich.calculator.utils.{Error, Expression, JsonMarshaller, Result, ValidationError}
+import dziemich.calculator.utils.{Error, JsonMarshaller, Result, ValidationError}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
